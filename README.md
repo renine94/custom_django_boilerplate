@@ -28,7 +28,10 @@
   - env 변수들도 분리가 가능하나, 추후 AWS Secret Manager 를 사용할거라 판단하여 따로 작업안했습니다.
 
 ## 실행 방법
-1. `python manage.py makemigrations`
-2. `python manage.py migrate`
-3. `python mange.py runserver`
+-  `python -m venv venv`
+-  `source venv/bin/activate`
+-  `pip install -r requirements/dev.txt`
+-  `python manage.py makemigrations`
+-  `python manage.py migrate`
+-  `python mange.py runserver`
 
