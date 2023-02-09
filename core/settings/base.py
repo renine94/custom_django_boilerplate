@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     # My App
     'app.accounts',
     'app.boards',
+    # Library'
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

@@ -1,8 +1,9 @@
 from django.urls import path
 
-from . import views
+from .views.user.v1 import AccountAPI
+
+app_name = 'accounts'
 
 urlpatterns = [
-    path('', views.index),
-    path('/test', views.index2),
+    path('/v1', AccountAPI.as_view()),  # 회원 가입
 ]
