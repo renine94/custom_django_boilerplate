@@ -20,7 +20,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin', admin.site.urls),
-    path('accounts', include('app.accounts.urls')),
+    # accounts
+    path('v1/accounts', include('app.accounts.urls.v1')),
+    path('v2/accounts', include('app.accounts.urls.v2')),
 ]
 
 # 디버깅 (개발모드) 일때만 표시
