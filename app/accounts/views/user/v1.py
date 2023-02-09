@@ -105,8 +105,8 @@ class PasswordResetAPI(APIView):
         serializer = PasswordResetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        pw_reset_code = serializer.validated_data['code']
-        user = get_object_or_404(User, password_reset_code=pw_reset_code)
+        confirm_code = serializer.validated_data['code']
+        user = User.objects.get(confirm_code=confirm_code)
 
         user.set_password(serializer.validated_data['password'])
         user.confirm_code = None
@@ -132,14 +132,14 @@ class ConfirmCodeRequestAPI(APIView):
 
 class ConfirmCodeCheckAPI(APIView):
     """
-    회원가입시, 휴대전화 인증번호 발송 API
+    회원가입시, 휴대전화 인증번호 확인 체크 API
     """
 
     def post(self, request):
         confirm_code = request.data.get('confirm_code')
 
         try:
-            signup_phone_code = SignUpPhoneCode.objects.get(confirm_code=confirm_code)
+            signup_phone_code = SignUpPhoneCode.objects.get(confirm_code=confirm_code, is_confirm=False)
             signup_phone_code.is_confirm = True
             signup_phone_code.save()
         except SignUpPhoneCode.DoesNotExist:
