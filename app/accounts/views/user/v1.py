@@ -1,3 +1,5 @@
+from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
@@ -5,9 +7,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authtoken.models import Token
 
 from app.accounts.models import User
-from app.accounts.serializers.user import UserSerializer
+from app.accounts.models.signup_phone_code import SignUpPhoneCode
+from app.accounts.serializers.user import (
+    UserInfoSerializer,
+    LoginSerializer,
+    UserSignUpSerializer,
+    PasswordResetSerializer,
+)
+from core.handlers.SmsHandler import SnsHandler
+from core.utils.accounts import get_random_number
 
 
 class UserAPI(APIView):
@@ -26,30 +37,111 @@ class UserAPI(APIView):
             nickname = values.get('nickname')
             users = users.filter(nickname__icontains=nickname)
 
-        serializer = UserSerializer(users, many=True)
+        serializer = UserInfoSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @transaction.atomic
     def post(self, request: Request) -> Response:
         """
         회원 가입
         1. 전화 번호 인증 후 회원가입 이 가능 해야 한다.
+            - 아직 회원 데이터가 만들어지지 않아, 휴대폰번호와 인증번호를 임시로 저장할 테이블이 필요
         """
+        serializer = UserSignUpSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        token = Token.objects.create(user=instance)
+        return Response({"Token": token.key}, status=status.HTTP_201_CREATED)
 
 
 class UserDetailAPI(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, pk):
+    def get(self, request: Request, pk: int) -> Response:
         """단일 회원 조회 (내 정보 보기 기능)"""
-        user = get_object_or_404(User, pk=1)
-        serializer = UserSerializer(user)
+        user = get_object_or_404(User, pk=pk)
+        serializer = UserInfoSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class LoginAPI(APIView):
+    def post(self, request):
+        """
+        유저 로그인
+        - email or phone_number 로 로그인이 가능해야 한다.
+        """
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # 방법 1 ( 확장성은 좋으나, 내부 구현로직을 뜯어서 고쳐야 하므로 러닝커브 존재 )
+        # user = authenticate(**serializer.validated_data)  # TODO CustomBackend 만들어서 authenticate 구현
+        # 방법 2
+        email = serializer.validated_data.get('email')
+        phone_number = serializer.validated_data.get('phone_number')
+
+        qs = User.objects.filter(Q(email=email) | Q(phone_number=phone_number))
+        if qs.exists():
+            token = Token.objects.get(user=qs.first())
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        return Response({'data': '일치하는 회원정보를 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class PasswordResetAPI(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        """email 과 phone_number를 받아 인증번호 전송"""
+        email = request.data.get('email')
+        phone_number = request.data.get('phone_number')
+
+        user = get_object_or_404(User, email=email)
+        if user.phone_number == phone_number:
+            user.send_confirm_code()
+            return Response({'message': '인증번호 전송 완료'}, status=status.HTTP_200_OK)
+        return Response({'입력하신 이메일주소와 핸드폰번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        """인증번호와 변경할 비밀번호 받아서 pw변경"""
+        serializer = PasswordResetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        pw_reset_code = serializer.validated_data['code']
+        user = get_object_or_404(User, password_reset_code=pw_reset_code)
+
+        user.set_password(serializer.validated_data['password'])
+        user.confirm_code = None
+        user.save()
+        return Response({'message': '비밀번호 재설정 완료'}, status=status.HTTP_200_OK)
+
+
+class ConfirmCodeRequestAPI(APIView):
     """
-    로그인 Controller
+    회원가입시, 휴대전화 인증번호 발송 API
+    """
+
+    def get(self, request):
+        phone_number = request.data.get('phone_number')
+        random_number = get_random_number()
+
+        # TODO 인증번호 보내는 모듈 구현
+        # SnsHandler.send(phone_number, random_number)
+
+        SignUpPhoneCode(phone_number=phone_number, confirm_code=random_number).save()
+        return Response({'message': f'인증번호 [{random_number}] 전송 완료'}, status=status.HTTP_200_OK)
+
+
+class ConfirmCodeCheckAPI(APIView):
+    """
+    회원가입시, 휴대전화 인증번호 발송 API
     """
 
     def post(self, request):
-        return "Login API"
+        confirm_code = request.data.get('confirm_code')
+
+        try:
+            signup_phone_code = SignUpPhoneCode.objects.get(confirm_code=confirm_code)
+            signup_phone_code.is_confirm = True
+            signup_phone_code.save()
+        except SignUpPhoneCode.DoesNotExist:
+            return Response({'data': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'data': True}, status=status.HTTP_200_OK)

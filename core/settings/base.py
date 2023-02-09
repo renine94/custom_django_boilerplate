@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'app.boards',
     # Library'
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -122,14 +123,13 @@ AUTH_USER_MODEL = 'accounts.User'
 
 APPEND_SLASH = False
 
-# django rest framework
+# django rest framework (DRF)
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',  # TODO JWT 교체 필요
+        'rest_framework.authentication.SessionAuthentication',  # for DRF browser
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
 }
