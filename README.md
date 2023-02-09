@@ -31,7 +31,7 @@
 -  `python -m venv venv`
 -  `source venv/bin/activate`
 -  `pip install -r requirements/local.txt`
--  `export DJANGO_SETTINGS_MODULE=core.settings.local` (개발당시 pycharm 따로 설정, vscode 나 터미널에서 서버 띄우려면 따로 설정필요합니다.)
+-  `export DJANGO_SETTINGS_MODULE=core.settings.local` (개발당시 pycharm 따로 설정, vscode 나 터미널에서 서버 띄우려면 따로 설정필요)
 -  `python manage.py makemigrations`
 -  `python manage.py migrate`
 -  `python mange.py runserver`
