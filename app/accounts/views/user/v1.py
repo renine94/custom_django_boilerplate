@@ -68,7 +68,6 @@ class LoginAPI(APIView):
     def post(self, request):
         """
         유저 로그인
-        - email or phone_number 로 로그인이 가능해야 한다.
         """
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -78,10 +77,16 @@ class LoginAPI(APIView):
         # 방법 2
         email = serializer.validated_data.get('email')
         phone_number = serializer.validated_data.get('phone_number')
+        password = serializer.validated_data.get('password')
 
         qs = User.objects.filter(Q(email=email) | Q(phone_number=phone_number))
         if qs.exists():
-            token = Token.objects.get(user=qs.first())
+            user = qs.first()
+            # 입력 받은 비밀번호 일치하는지 체크
+            if not user.check_password(password):
+                return Response({'message': '비밀번호가 일치하지 않습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            token = Token.objects.get(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response({'data': '일치하는 회원정보를 찾을 수 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -96,8 +101,8 @@ class PasswordResetAPI(APIView):
 
         user = get_object_or_404(User, email=email)
         if user.phone_number == phone_number:
-            user.send_confirm_code()
-            return Response({'message': '인증번호 전송 완료'}, status=status.HTTP_200_OK)
+            confirm_code = user.send_confirm_code()
+            return Response({'message': f'인증번호 [{confirm_code}] 전송 완료'}, status=status.HTTP_200_OK)
         return Response({'입력하신 이메일주소와 핸드폰번호가 일치하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
@@ -106,7 +111,10 @@ class PasswordResetAPI(APIView):
         serializer.is_valid(raise_exception=True)
 
         confirm_code = serializer.validated_data['code']
-        user = User.objects.get(confirm_code=confirm_code)
+        try:
+            user = User.objects.get(confirm_code=confirm_code)
+        except User.DoesNotExist:
+            return Response({'message': '해당 인증번호가 유효한지 다시 한번 확인해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(serializer.validated_data['password'])
         user.confirm_code = None

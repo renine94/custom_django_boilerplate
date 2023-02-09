@@ -62,3 +62,5 @@ class User(AbstractBaseUser, PermissionsMixin, BaseDateTime):
 
         self.confirm_code = random_number
         self.save()
+
+        return random_number
