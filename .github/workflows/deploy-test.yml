@@ -1,0 +1,21 @@
+name: 🚀 [Github Action Test]
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-test
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test 01
+        run: |
+          echo "CICD 툴 테스트를 시작합니다."
