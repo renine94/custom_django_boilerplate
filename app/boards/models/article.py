@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.base.models import BaseDateTime
+from core.base.models import BaseModel
 
 
 class ArticleManager(models.Manager):
@@ -11,7 +11,7 @@ class ArticleQuerySet(models.QuerySet):
     pass
 
 
-class Article(BaseDateTime, models.Model):
+class Article(BaseModel, models.Model):
     class Meta:
         verbose_name_plural = '게시글'
 

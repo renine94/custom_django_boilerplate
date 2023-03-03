@@ -1,9 +1,9 @@
 from django.db import models
 
-from core.base.models import BaseDateTime
+from core.base.models import BaseModel
 
 
-class SignUpPhoneCode(BaseDateTime, models.Model):
+class SignUpPhoneCode(BaseModel, models.Model):
     class Meta:
         db_table = 'accounts_signup_phone_code'
         unique_together = (('phone_number', 'confirm_code'),)

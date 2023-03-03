@@ -8,21 +8,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
-    # "default": {
-    #     "ENGINE": "django.db.backends.mysql",
-    #     "NAME": 'mydb',
-    #     "USER": 'root',
-    #     "PASSWORD": '0000',
-    #     "HOST": '127.0.0.1',
-    #     "PORT": '3306',
-    #     "OPTIONS": {"charset": "utf8mb4"},
-    #     "ATOMIC_REQUESTS": False,
-    #     "AUTOCOMMIT": True,
-    #     "TEST": {
-    #         'NAME': 'mytestdb',
-    #     },
-    # },
+        "AUTOCOMMIT": True,
+    },
+    "mysql": {
+        "ENGINE": env('DB_ENGINE'),
+        "NAME": env('DB_NAME'),
+        "USER": env('DB_USER'),
+        "PASSWORD": env('DB_PASSWORD'),
+        "HOST": env('DB_HOST'),
+        "PORT": env('DB_PORT'),
+        "OPTIONS": {"charset": "utf8mb4"},
+        "ATOMIC_REQUESTS": True,
+        "TEST": {'NAME': 'mytestdb'},
+    },
     # 'replica': {
     #     "ENGINE": "django.db.backends.mysql",
     #     "NAME": os.getenv("DB_NAME"),
@@ -35,3 +33,6 @@ DATABASES = {
 }
 
 # DATABASE_ROUTERS = ['core.routers.ReadReplicaRouter']
+
+print(DATABASES)
+print(APP_ENV)

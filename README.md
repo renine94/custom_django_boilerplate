@@ -35,3 +35,7 @@
 -  `python manage.py migrate`
 -  `python mange.py runserver`
 
+## Docker Image
+- `docker build -t test:0.0.4 -f ./deploy/Dockerfile . --no-cache`
+
+위에 . 이 중요

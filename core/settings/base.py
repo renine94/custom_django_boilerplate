@@ -10,20 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 from pathlib import Path
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 APPS_DIR = BASE_DIR / 'app'
 
+# 환경변수 설정
+env = environ.Env(DEBUG=(bool, True))
+environ.Env.read_env(
+    env_file=os.path.join(BASE_DIR, '.env')
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# TODO Django 암호키 .env 환경변수 분리 필요
-SECRET_KEY = 'django-insecure-w8l9gt6f08r)$5&vz-0xzu)_k^@uqw@9!=ykkdjv3-+u_%0%hj'
+SECRET_KEY = env('SECRET_KEY')
+APP_ENV = env('APP_ENV')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,6 +47,7 @@ INSTALLED_APPS = [
     # My App
     'app.accounts',
     'app.boards',
+    'app.commons',
     # Library'
     'rest_framework',
     'rest_framework.authtoken',
@@ -132,4 +140,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'EXCEPTION_HANDLER': 'core.exceptions.handler.custom_exception_handler',
 }

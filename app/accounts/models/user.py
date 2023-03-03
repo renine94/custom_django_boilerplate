@@ -4,8 +4,7 @@ from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 from django.db import models
 
-from core.base.models import BaseDateTime
-from core.handlers.SmsHandler import SnsHandler
+from core.base.models import BaseModel
 from core.utils.accounts import get_random_number
 
 
@@ -29,7 +28,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin, BaseDateTime):
+class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     phone_number_validator = RegexValidator(regex=r'^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$')
 
     email = models.EmailField('이메일', unique=True)

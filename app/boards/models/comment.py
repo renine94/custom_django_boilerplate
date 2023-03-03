@@ -1,6 +1,7 @@
 from django.db import models
+from django.db.models import Count
 
-from core.base.models import BaseDateTime
+from core.base.models import BaseModel
 from app.boards.models import Article
 
 
@@ -24,7 +25,7 @@ class CommentQuerySet(models.QuerySet):
         return self.annotate_content_length().filter(content_length__gte=query)
 
 
-class Comment(BaseDateTime, models.Model):
+class Comment(BaseModel, models.Model):
     class Meta:
         verbose_name_plural = '댓글'
 

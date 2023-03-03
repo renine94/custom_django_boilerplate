@@ -6,18 +6,15 @@ DEBUG = False
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases}
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": 'mydb',
-        "USER": 'root',
-        "PASSWORD": '0000',
-        "HOST": '127.0.0.1',
-        "PORT": '3306',
+        "ENGINE": env('DB_ENGINE'),
+        "NAME": env('DB_NAME'),
+        "USER": env('DB_USER'),
+        "PASSWORD": env('DB_PASSWORD'),
+        "HOST": env('DB_HOST'),
+        "PORT": env('DB_PORT'),
         "OPTIONS": {"charset": "utf8mb4"},
-        "ATOMIC_REQUESTS": False,
-        "AUTOCOMMIT": True,
-        "TEST": {
-            'NAME': 'mytestdb',
-        },
+        "ATOMIC_REQUESTS": True,
+        "TEST": {'NAME': 'mytestdb'},
     },
     # 'replica': {
     #     "ENGINE": "django.db.backends.mysql",
@@ -31,3 +28,6 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS = ['core.routers.ReadReplicaRouter']
+
+print(DATABASES)
+print(APP_ENV)
