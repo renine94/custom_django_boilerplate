@@ -24,8 +24,15 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo $GITHUB_ENV
 
       - name: 4) pr 에서 branch name 추출
         if: github.event_name == 'pull_request'
         run: |
           echo "BRANCH_NAME=${GITHUB_BASE_REF}" >> $GITHUB_ENV
+          echo $GITHUB_ENV
+
+      - name: 5) ECR 저장소 이름
+        run: |
+          echo "ECR_NAME=my-backend-${BRANCH_NAME}" >> $ECR_NAME
+          echo $ECR_NAME
