@@ -11,34 +11,33 @@ concurrency:
 env:
   APP_ENV: test
   ECR_NAME: my-backend-test
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 
 jobs:
   build:
     name: build
-    environment: prod
+    environment: dev
     runs-on: ubuntu-latest
     steps:
-      - name: 1) Checkout code
+      - name: 1) 코드 가져오기
         uses: actions/checkout@v3
 
-      - name: 2) Test 01
+      - name: 2) 환경변수값 테스트
         run: |
           echo "CICD 테스트를 시작합니다."
           echo GITHUB_ENV = $GITHUB_ENV
           echo GITHUB_ACTION = $GITHUB_ACTION
-          echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
-
-      - name: 3) ECR 저장소 이름
-        run: |
           echo ECR_NAME = $ECR_NAME
+          echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
+          echo AWS_ACCESS_KEY_ID = $AWS_ACCESS_KEY_ID
 
-      - name: Configure AWS credentials
+      - name: 3) AWS 자격인증
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: 5) Amazon ECR 로그인
+      - name: 4) Amazon ECR 로그인
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
