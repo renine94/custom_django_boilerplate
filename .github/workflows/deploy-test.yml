@@ -19,6 +19,7 @@ jobs:
       - name: 2) Test 01
         run: |
           echo "CICD 툴 테스트를 시작합니다."
+          echo $GITHUB_ENV
 
       - name: 3) push 에서 branch name 추출
         if: github.event_name != 'pull_request'
