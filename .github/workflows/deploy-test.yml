@@ -51,6 +51,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ ECR_NAME }}:latest
+          tags: $ECR_NAME:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
