@@ -8,6 +8,10 @@ concurrency:
   group: deploy-test
   cancel-in-progress: true
 
+env:
+  APP_ENV: test
+  ECR_NAME: my-backend-test
+
 jobs:
   build:
     name: build
@@ -19,21 +23,12 @@ jobs:
       - name: 2) Test 01
         run: |
           echo "CICD 툴 테스트를 시작합니다."
-          echo $GITHUB_ENV
+          echo GITHUB_ENV=$GITHUB_ENV
+          echo GITHUB_ACTION=$GITHUB_ACTION
+          echo GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME
+          echo GITHUB_HEAD_REF=$GITHUB_HEAD_REF
 
-      - name: 3) push 에서 branch name 추출
-        if: github.event_name != 'pull_request'
+      - name: 3) ECR 저장소 이름
         run: |
-          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
-          echo $GITHUB_ENV
-
-      - name: 4) pr 에서 branch name 추출
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "BRANCH_NAME=${GITHUB_BASE_REF}" >> $GITHUB_ENV
-          echo $GITHUB_ENV
-
-      - name: 5) ECR 저장소 이름
-        run: |
-          echo "ECR_NAME=my-backend-${BRANCH_NAME}" >> $ECR_NAME
+          export ECR_NAME=my-backend-$APP_ENV
           echo $ECR_NAME
