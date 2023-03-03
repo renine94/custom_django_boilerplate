@@ -38,9 +38,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-#      - name: 4) Amazon ECR 로그인
-#        id: login-ecr
-#        uses: aws-actions/amazon-ecr-login@v1
+      - name: 4) Amazon ECR 로그인
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 #
 #      - name: 5) Set up Docker Buildx
 #        uses: docker/setup-buildx-action@v1
