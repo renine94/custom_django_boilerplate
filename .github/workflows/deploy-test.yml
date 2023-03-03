@@ -22,13 +22,21 @@ jobs:
 
       - name: 2) Test 01
         run: |
-          echo "CICD 툴 테스트를 시작합니다."
-          echo GITHUB_ENV=$GITHUB_ENV
-          echo GITHUB_ACTION=$GITHUB_ACTION
-          echo GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME
-          echo GITHUB_HEAD_REF=$GITHUB_HEAD_REF
+          echo "CICD 테스트를 시작합니다."
+          echo GITHUB_ENV = $GITHUB_ENV
+          echo GITHUB_ACTION = $GITHUB_ACTION
+          echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
+          echo GITHUB_HEAD_REF = $GITHUB_HEAD_REF
 
       - name: 3) ECR 저장소 이름
         run: |
-          export ECR_NAME=my-backend-$APP_ENV
           echo $ECR_NAME
+
+      - name: 4) Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+        run:
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }}
