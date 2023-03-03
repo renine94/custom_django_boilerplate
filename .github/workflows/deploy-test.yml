@@ -11,10 +11,10 @@ concurrency:
 env:
   APP_ENV: test
   ECR_NAME: my-backend-test
-  AWS_ACCESS_KEY_ID1: ${{ dev.secrets.AWS_ACCESS_KEY_ID }}
-  AWS_ACCESS_KEY_ID2: ${{ prod.secrets.aws.AWS_ACCESS_KEY_ID }}
-  AWS_ACCESS_KEY_ID3: ${{ secrets.aws.AWS_ACCESS_KEY_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  AWS_ACCESS_KEY_ID_TEST: ${{ secrets.env.dev.AWS_ACCESS_KEY_ID }}
 
 jobs:
   build:
@@ -31,9 +31,7 @@ jobs:
           echo GITHUB_ACTION = $GITHUB_ACTION
           echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
           
-          echo AWS_ACCESS_KEY_ID1 = $AWS_ACCESS_KEY_ID1
-          echo AWS_ACCESS_KEY_ID2 = $AWS_ACCESS_KEY_ID2
-          echo AWS_ACCESS_KEY_ID3 = $AWS_ACCESS_KEY_ID3
+          echo AWS_ACCESS_KEY_ID_TEST = $AWS_ACCESS_KEY_ID_TEST
 
       - name: 3) ECR 저장소 이름
         run: |
