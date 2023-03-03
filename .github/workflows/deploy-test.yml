@@ -27,6 +27,7 @@ jobs:
           echo GITHUB_ACTION = $GITHUB_ACTION
           echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
           echo GITHUB_HEAD_REF = $GITHUB_HEAD_REF
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }}
 
       - name: 3) ECR 저장소 이름
         run: |
@@ -38,5 +39,3 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-        run:
-          echo ${{ secrets.AWS_ACCESS_KEY_ID }}
