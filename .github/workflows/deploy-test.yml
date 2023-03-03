@@ -13,9 +13,19 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: 1) Checkout code
         uses: actions/checkout@v3
 
-      - name: Test 01
+      - name: 2) Test 01
         run: |
           echo "CICD 툴 테스트를 시작합니다."
+
+      - name: 3) push 에서 branch name 추출
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: 4) pr 에서 branch name 추출
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "BRANCH_NAME=${GITHUB_BASE_REF}" >> $GITHUB_ENV
