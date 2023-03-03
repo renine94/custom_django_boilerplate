@@ -11,6 +11,8 @@ concurrency:
 env:
   APP_ENV: test
   ECR_NAME: my-backend-test
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   build:
@@ -26,12 +28,14 @@ jobs:
           echo GITHUB_ENV = $GITHUB_ENV
           echo GITHUB_ACTION = $GITHUB_ACTION
           echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
+          echo AWS_ACCESS_KEY_ID = $AWS_ACCESS_KEY_ID
+          echo AWS_SECRET_ACCESS_KEY = $AWS_SECRET_ACCESS_KEY
 
       - name: 3) ECR 저장소 이름
         run: |
-          echo $ECR_NAME
+          echo ECR_NAME = $ECR_NAME
 
-      - name: 4) Configure AWS credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
