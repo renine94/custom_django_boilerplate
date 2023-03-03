@@ -1,4 +1,4 @@
-name: 🚀 [Github Action Test]
+name: 🚀 [CICD 테스트...]
 
 on:
   push:

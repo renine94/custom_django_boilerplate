@@ -1,4 +1,4 @@
-name: 🚀 [스테이지 백엔드 배포]
+name: 🚀 [Deploy Backend Stage]
 
 on:
   push:
