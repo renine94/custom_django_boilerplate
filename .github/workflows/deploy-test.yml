@@ -75,7 +75,7 @@ jobs:
           echo "======================================1"
           echo "${{ steps.build-image.outputs.metadata }}"
           echo "${{ steps.build-image.outputs.metadata.image.name }}"
-          echo "${{ toJson(steps.build-image.outputs.metadata.image.name) }}"
+          echo "${{ toJson(steps.build-image.outputs.metadata.image) }}"
           echo "======================================2"
 
       - name: Get color
