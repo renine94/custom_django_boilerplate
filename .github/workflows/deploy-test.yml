@@ -71,7 +71,7 @@ jobs:
 
       - name: 7) Set Github Sha
         run: |
-          echo "IMAGE_TAG=${{ github.sha }} >> $GITHUB_OUTPUT
+          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_OUTPUT
 
 
   deploy:
