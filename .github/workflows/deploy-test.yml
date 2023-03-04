@@ -12,8 +12,8 @@ env:
   APP_ENV: test
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: my-backend-test
-  ECS_SERVICE: my_ecs_service
   ECS_CLUSTER: my_ecs_cluster
+  ECS_SERVICE: my_ecs_service
   ECS_TASK_DEFINITION: my_ecs_task_definition
 
 jobs:
@@ -77,7 +77,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 2) AWS 자격인증
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
