@@ -62,6 +62,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: 7) set image variable
+        run: |
+          echo "IMAGE_PATH=${{  steps.build-image.outputs }}" >> $env:GITHUB_OUTPUT
+          echo ${{  steps.build-image.outputs }}
+
   deploy:
     name: deploy
     environment: dev
@@ -90,7 +95,8 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ job.steps.build-image.outputs.image }}
+#          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
