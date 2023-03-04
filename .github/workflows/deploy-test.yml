@@ -63,7 +63,7 @@ jobs:
             APP_ENV=${{ env.APP_ENV }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
     outputs:
@@ -78,10 +78,6 @@ jobs:
     steps:
       - name: 1) 코드 이동
         uses: actions/checkout@v3
-
-      - name: 1-1) TEST
-        run: |
-          echo IMAGE_TAG = ${{ needs.build.outputs.IMAGE_TAGS }}
 
       - name: 2) AWS 자격인증
         uses: aws-actions/configure-aws-credentials@v1
