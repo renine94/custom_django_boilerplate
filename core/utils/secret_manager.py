@@ -4,6 +4,8 @@ import os
 import boto3
 import json
 
+from core.enums.const import AWSEnum
+
 
 def load_secrets_manager_env():
     app_env = 'test'
@@ -12,8 +14,8 @@ def load_secrets_manager_env():
     region_name = "ap-northeast-2"
 
     session = boto3.session.Session(
-        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        aws_access_key_id=os.environ.get(AWSEnum.AWS_ACCESS_KEY_ID.value),
+        aws_secret_access_key=os.environ.get(AWSEnum.AWS_SECRET_ACCESS_KEY.value),
         region_name=region_name
     )
     client = session.client(

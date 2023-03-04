@@ -1,10 +1,10 @@
 from core.base.enum import BaseEnum
 
 
-class TestEnum(BaseEnum):
-    """테스트 관련 상수 모음"""
-    TEST1 = "TEST1"
-    TEST2 = "TEST2"
+class AWSEnum(BaseEnum):
+    """AWS 관련 상수 모음"""
+    AWS_ACCESS_KEY_ID = "AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY"
 
 
 class RoleEnum(BaseEnum):
