@@ -97,8 +97,9 @@ jobs:
       - name: build job에 변수 가져오기 테스트
         run: |
           echo SELECTED_COLOR1 = ${{ needs.steps.random-color-generator.outputs.SELECTED_COLOR }}
-          echo SELECTED_COLOR2 = ${{ needs.build.steps.random-color-generator.outputs.SELECTED_COLOR }}
-          echo SELECTED_COLOR3 = ${{ needs.build.random-color-generator.outputs.SELECTED_COLOR }}
+          echo SELECTED_COLOR2 = ${{ needs.build.env }}
+          echo SELECTED_COLOR3 = $GITHUB_OUTPUT
+          echo SELECTED_COLOR4 = $GITHUB_CONTEXT
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
