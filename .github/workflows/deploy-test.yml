@@ -16,6 +16,7 @@ env:
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
   ECS_TASK_DEFINITION: my_ecs_task_definition
+  IMAGE_PATH: 866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test:latest
 
 jobs:
   build:
@@ -99,7 +100,8 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ env.IMAGE_PATH }}
+#          image: ${{ steps.build-image.outputs.image.name }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -108,8 +110,3 @@ jobs:
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
-
-#      - name: 3) Install ecs cli
-#        uses: marocchino/setup-ecs-cli@v1
-#        with:
-#          version: 'latest'
