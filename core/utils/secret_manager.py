@@ -1,4 +1,3 @@
-from django.conf import settings
 from botocore.exceptions import ClientError
 
 import os
@@ -13,8 +12,8 @@ def load_secrets_manager_env():
     region_name = "ap-northeast-2"
 
     session = boto3.session.Session(
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACESS_KEY,
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACESS_KEY'),
         region_name=region_name
     )
     client = session.client(

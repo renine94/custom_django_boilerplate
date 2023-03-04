@@ -146,7 +146,3 @@ REST_FRAMEWORK = {
     ],
     'EXCEPTION_HANDLER': 'core.exceptions.handler.custom_exception_handler',
 }
-
-# AWS
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACESS_KEY = env('AWS_SECRET_ACESS_KEY')
