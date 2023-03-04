@@ -81,7 +81,10 @@ jobs:
 
       - name: 1-1) TEST
         run: |
-          echo IMAGE_TAG = ${{ needs.build.outputs.build-image.outputs }}
+          echo IMAGE_TAG1 = ${{ needs.build.outputs.build-image.outputs }}
+          echo IMAGE_TAG2 = ${{ needs.build.outputs.build-image }}
+          echo IMAGE_TAG3 = ${{ needs.build.outputs }}
+          echo IMAGE_TAG4 = ${{ needs.build }}
           pwd
           ls -al
           echo ===========================================
