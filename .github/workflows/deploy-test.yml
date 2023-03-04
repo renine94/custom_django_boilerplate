@@ -15,7 +15,7 @@ env:
   CONTAINER_NAME: my_container_name
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
-  ECS_TASK_DEFINITION: ./deploy/task-definition.json
+  ECS_TASK_DEFINITION: deploy/task-definition.json
   IMAGE_PATH: 866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test
 
 jobs:
@@ -69,11 +69,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: 7) Set Github Sha
-        run: |
-          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_OUTPUT
-
-
   deploy:
     name: deploy
     environment: dev
@@ -82,7 +77,7 @@ jobs:
       - build
     steps:
       - name: 0) TEST
-        run: echo IMAGE_TAG = ${{ needs.build.outputs.IMAGE_TAG }}
+        run: echo IMAGE_TAG = ${{ needs.build.steps.build-image.env.IMAGE_TAG }}
 
       - name: 1) 코드 이동
         uses: actions/checkout@v3
