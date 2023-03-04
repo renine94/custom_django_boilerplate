@@ -65,6 +65,8 @@ jobs:
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+    outputs:
+      TEST_KYLE=test-kyle
 
   deploy:
     name: deploy
@@ -83,6 +85,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
+
+      - name: build job에 변수 가져오기 테스트
+        run: |
+          echo ${{ jobs.build.outputs.TEST_KYLE }}
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
