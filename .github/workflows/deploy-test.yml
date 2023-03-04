@@ -59,7 +59,10 @@ jobs:
           context: .
           file: ./deploy/Dockerfile
           push: true
-          build-args: APP_NAME=local,AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }},AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          build-args: |
+            APP_ENV=local
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           tags: ${{ env.IMAGE_PATH }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
