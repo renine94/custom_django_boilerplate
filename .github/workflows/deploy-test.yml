@@ -75,6 +75,8 @@ jobs:
           echo "${{ steps.build-image.outputs.metadata.image.name }}"
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+    outputs:
+      KTEST: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}
 
   deploy:
     name: deploy
@@ -97,6 +99,8 @@ jobs:
       - name: build job에 변수 가져오기 테스트
         run: |
           echo ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}
+          echo ${{ needs.build.outputs }}
+          echo ${{ needs.build.outputs.KTEST }}
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
