@@ -72,9 +72,11 @@ jobs:
         id: random-color-generator
         run: |
           echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+          echo "아 드럽게 안되네 증말 ㅇㄴㅁㄹㄴㅁㅇㄹㄴㅇㅁ"
           echo "${{ steps.build-image.outputs.metadata }}"
           echo "${{ fromJson(steps.build-image.outputs.metadata).image.name }}"
-          echo "${{ fromJson(steps.build-image.outputs.metadata) }}"
+          echo "${{ fromJson(steps.build-image.outputs.metadata).image }}"
+          echo "${{ fromJson(steps.build-image.outputs.metadata).sources }}"
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
 
@@ -98,9 +100,7 @@ jobs:
 
       - name: build job에 변수 가져오기 테스트
         run: |
-          echo SELECTED_COLOR1 = ${{ needs.build.steps.random-color-generator.outputs.SELECTED_COLOR }}
-          echo SELECTED_COLOR2 = ${{ needs.build.env.TEST }}
-          echo SELECTED_COLOR3 = $GITHUB_OUTPUT
+          echo SELECTED_COLOR1 = ${{ needs.build }}
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
