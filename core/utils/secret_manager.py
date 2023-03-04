@@ -8,7 +8,8 @@ from core.enums.const import AWSEnum
 
 
 def load_secrets_manager_env():
-    app_env = os.environ.get('APP_ENV') or 'test'
+    app_env = 'test'
+    # app_env = os.environ.get('APP_ENV') or 'test'
 
     secret_name = f"myapp/{app_env}"
     region_name = "ap-northeast-2"

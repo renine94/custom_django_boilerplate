@@ -102,7 +102,7 @@ jobs:
       - name: build job에 변수 가져오기 테스트
         run: |
           echo SELECTED_COLOR1 = ${{ needs.build }}
-          echo SELECTED_COLOR1 = ${{ fronJson(needs.build) }}
+          echo SELECTED_COLOR1 = ${{ fromJson(needs.build) }}
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
