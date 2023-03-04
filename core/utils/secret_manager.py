@@ -13,7 +13,7 @@ def load_secrets_manager_env():
 
     session = boto3.session.Session(
         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.environ.get('AWS_SECRET_ACESS_KEY'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
         region_name=region_name
     )
     client = session.client(
