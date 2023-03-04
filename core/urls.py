@@ -18,7 +18,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 
+
+@api_view(['GET'])
+@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def test(request):
     from rest_framework.response import Response
     return Response('hello world test!')
