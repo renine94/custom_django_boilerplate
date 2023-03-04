@@ -72,12 +72,13 @@ jobs:
         id: random-color-generator
         run: |
           echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
-          echo "아 드럽게 안되네 증말 ㅇㄴㅁㄹㄴㅁㅇㄹㄴㅇㅁ"
+          echo "======================================"
           echo "${{ steps.build-image.outputs.metadata }}"
           echo "${{ fromJson(steps.build-image.outputs.metadata).image.name }}"
-          echo "${{ fromJson(steps.build-image.outputs.metadata).\"image.name\" }}"
+          echo "${{ fromJson(steps.build-image.outputs.metadata).'image.name' }}"
           echo "${{ fromJson(steps.build-image.outputs.metadata)."image.name" }}"
           echo "${{ fromJson(steps.build-image.outputs.metadata).image.name }}"
+          echo "======================================"
 
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
