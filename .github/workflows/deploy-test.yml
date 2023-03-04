@@ -71,6 +71,8 @@ jobs:
 
       - name: 8) Get Image Path
         run: echo "IMAGE_PATH = ${{ steps.set-image-path.outputs.IMAGE_PATH }}"
+    outputs:
+      IMAGE_PATH: ${{ steps.build-image.outputs.digest }}
 
   deploy:
     name: deploy
