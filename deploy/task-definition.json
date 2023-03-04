@@ -1,6 +1,6 @@
 {
   "family": "my-task-definition-name",
-  "executionRoleArn": "[your task definition excution role arn]",
+  "executionRoleArn": "arn:aws:iam::866611624080:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
   "networkMode": "awsvpc",
   "containerDefinitions": [
     {
