@@ -1,8 +1,8 @@
-import base64
-import os
-
-import boto3
+from django.conf import settings
 from botocore.exceptions import ClientError
+
+import os
+import boto3
 import json
 
 
@@ -13,10 +13,8 @@ def load_secrets_manager_env():
     region_name = "ap-northeast-2"
 
     session = boto3.session.Session(
-        # TODO 추후 변경 필요.
-        # aws_access_key_id='',
-        # aws_secret_access_key='',
-        profile_name='Fitpet-dev',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACESS_KEY,
         region_name=region_name
     )
     client = session.client(

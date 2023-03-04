@@ -58,14 +58,19 @@ jobs:
           file: ./deploy/Dockerfile
           push: true
           build-args: APP_NAME=local,AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }},AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ github.sha }}
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:latest
+#          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: 7) set image variable
+        id: set-image-path
         run: |
-          echo "IMAGE_PATH=${{  steps.build-image.outputs }}" >> $env:GITHUB_OUTPUT
+          echo "IMAGE_PATH=${{  steps.build-image.outputs }}" >> $GITHUB_OUTPUT
           echo ${{  steps.build-image.outputs }}
+
+      - name: 8) Get color
+        run: echo "IMAGE_PATH = ${{ steps.set-image-path.outputs.IMAGE_PATH }}"
 
   deploy:
     name: deploy
@@ -95,7 +100,6 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-#          image: ${{ steps.build-image.outputs.image }}
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition

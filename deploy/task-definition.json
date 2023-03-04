@@ -1,35 +1,24 @@
 {
-  "family": "django-app",
+  "family": "my-task-definition-name",
+  "executionRoleArn": "[your task definition excution role arn]",
+  "networkMode": "awsvpc",
   "containerDefinitions": [
     {
-      "name": "django",
-      "image": "your-django-image-url",
-      "memoryReservation": 512,
-      "essential": true,
+      "name": "my-container-for-ecs",
+      "image": "866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test:latest",
       "portMappings": [
         {
           "containerPort": 8000,
-          "hostPort": 8000
+          "hostPort": 8000,
+          "protocol": "tcp"
         }
       ],
-      "environment": [
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/myapp-test",
-          "awslogs-region": "ap-northeast-2",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
+      "essential": true
     }
   ],
-  "networkMode": "awsvpc",
-  "executionRoleArn": "your-ecs-task-execution-role",
-  "taskRoleArn": "your-ecs-task-role",
   "requiresCompatibilities": [
     "FARGATE"
   ],
-  "cpu": "512",
-  "memory": "1024"
+  "cpu": "1024",
+  "memory": "2048"
 }
