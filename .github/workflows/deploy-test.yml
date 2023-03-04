@@ -77,12 +77,6 @@ jobs:
           echo "======================================2"
           echo "${{ fromJson(steps.build-image.outputs.metadata) }}"
           echo "======================================3"
-          echo "${{ fromJson(steps.build-image.outputs.metadata).image.name }}"
-          echo "======================================4"
-          echo "${{ fromJson(steps.build-image.outputs.metadata).image }}"
-          echo "======================================5"
-          echo "${{ fromJson(steps.build-image.outputs.metadata).\"image\" }}"
-          echo "======================================6"
 
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
