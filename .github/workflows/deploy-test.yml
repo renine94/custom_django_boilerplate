@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  APP_ENV: test
+  APP_ENV: local
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: my-backend-test
   CONTAINER_NAME: my_container_name
@@ -59,7 +59,7 @@ jobs:
           file: ./deploy/Dockerfile
           push: true
           build-args: |
-            APP_ENV=local
+            APP_ENV=${{ env.APP_ENV }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}

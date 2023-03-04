@@ -21,7 +21,7 @@ COPY . .
 RUN apk update
 RUN apk add --no-cache gcc musl-dev linux-headers mariadb-dev mariadb-client libffi-dev python3-dev make build-base
 RUN pip install --upgrade pip
-RUN pip install --no-cache -r requirements/prod.txt
+RUN pip install --no-cache -r requirements/${APP_ENV}.txt
 
 # 물리 코어 개수 구하기
 RUN export NUM_CORES=$(grep -c ^processor /proc/cpuinfo)
