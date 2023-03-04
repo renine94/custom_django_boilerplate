@@ -74,8 +74,7 @@ jobs:
           echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
           echo "======================================"
           echo "${{ steps.build-image.outputs.metadata }}"
-          echo "${{ fromJson(steps.build-image.outputs.metadata).image.name }}"
-          echo "${{ fromJson(steps.build-image.outputs.metadata).'image.name' }}"
+          echo "${{ fromJson(steps.build-image.outputs.metadata) }}"
           echo "${{ fromJson(steps.build-image.outputs.metadata)."image.name" }}"
           echo "${{ fromJson(steps.build-image.outputs.metadata).image.name }}"
           echo "======================================"
