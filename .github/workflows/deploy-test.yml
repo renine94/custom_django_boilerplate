@@ -68,6 +68,8 @@ jobs:
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+    outputs:
+      IMAGE_TAG: ${{ steps.build-image.env.IMAGE_TAG }}
 
   deploy:
     name: deploy
@@ -82,7 +84,7 @@ jobs:
       - name: 1-1) TEST
         run: |
           echo IMAGE_TAG3 = ${{ toJson(needs.build.outputs) }}
-          echo IMAGE_TAG4 = ${{ toJson(needs.build) }}
+          echo IMAGE_TAG3 = ${{ needs.build.outputs.IMAGE_TAG }}
 
       - name: 2) AWS 자격인증
         uses: aws-actions/configure-aws-credentials@v1
