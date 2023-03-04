@@ -10,7 +10,11 @@ concurrency:
 
 env:
   APP_ENV: test
-  ECR_NAME: my-backend-test
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: my-backend-test
+  ECS_SERVICE: my_ecs_service
+  ECS_CLUSTER: my_ecs_cluster
+  ECS_TASK_DEFINITION: my_ecs_task_definition
 
 jobs:
   build:
@@ -26,7 +30,7 @@ jobs:
           echo "CICD 테스트를 시작합니다."
           echo GITHUB_ENV = $GITHUB_ENV
           echo GITHUB_ACTION = $GITHUB_ACTION
-          echo ECR_NAME = $ECR_NAME
+          echo ECR_REPOSITORY = $ECR_REPOSITORY
           echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
 
       - name: 3) AWS 자격인증
@@ -53,7 +57,7 @@ jobs:
           file: ./deploy/Dockerfile
           push: true
           build-args: APP_NAME=local,AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }},AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_NAME  }}:${{ github.sha }}
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -69,24 +73,33 @@ jobs:
       PROJECT_NAME: myapp-backend-prod
 
     steps:
-      - name: 0) Test
-        run: |
-          echo 'ECS 로 꼭 배포성공 테스트 할테야!!'
-
       - name: 1) 코드 이동
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 2) AWS 자격인증
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: 3) Install ecs cli
-        uses: marocchino/setup-ecs-cli@v1
+      - name: 3) Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          version: 'latest'
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
 
-      - name: 4) 배포단계 Deploy
-        run: aws ecs update-service --cluster "${CLUSTER}" --service "${PROJECT_NAME}" --force-new-deployment
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+#      - name: 3) Install ecs cli
+#        uses: marocchino/setup-ecs-cli@v1
+#        with:
+#          version: 'latest'
