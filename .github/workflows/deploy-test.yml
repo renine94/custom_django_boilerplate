@@ -56,3 +56,12 @@ jobs:
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_NAME  }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    name: deploy
+    environment: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1) Deploy Test
+        run: |
+          echo 'ECS 로 꼭 배포성공 테스트 할테야!!'
