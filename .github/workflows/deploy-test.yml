@@ -50,7 +50,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./deploy
+          file: ./deploy/Dockerfile
           push: true
           tags: ${{ env.ECR_NAME  }}:latest
           cache-from: type=gha
