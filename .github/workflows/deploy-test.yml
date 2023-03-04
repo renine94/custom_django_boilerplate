@@ -15,7 +15,7 @@ env:
   CONTAINER_NAME: my_container_name
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
-  ECS_TASK_DEFINITION: /deploy/task-definition.json
+  ECS_TASK_DEFINITION: task-definition.json
   IMAGE_PATH: 866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test
 
 jobs:
