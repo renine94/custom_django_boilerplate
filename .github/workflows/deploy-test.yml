@@ -69,18 +69,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Set color
-        id: random-color-generator
+      - name: 7) Set Github Sha
         run: |
-          echo "SELECTED_COLOR=sdafsdafsadfsdafsdaf" >> $GITHUB_OUTPUT
-          echo "======================================1"
-          echo "${{ steps.build-image.outputs.metadata }}"
-          echo "${{ steps.build-image.outputs.metadata.image.name }}"
-          echo "${{ toJson(steps.build-image.outputs.metadata.image) }}"
-          echo "======================================2"
+          echo "IMAGE_TAG=${{ github.sha }} >> $GITHUB_OUTPUT
 
-      - name: Get color
-        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
 
   deploy:
     name: deploy
@@ -89,6 +81,8 @@ jobs:
     needs:
       - build
     steps:
+      - name: 0) TEST
+        run: echo IMAGE_TAG = ${{ needs.build.outputs.IMAGE_TAG }}
 
       - name: 1) 코드 이동
         uses: actions/checkout@v3
@@ -100,17 +94,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: build job에 변수 가져오기 테스트
-        run: |
-          echo TEST1 = ${{ needs.build }}
-
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ env.IMAGE_PATH }}
+          image: ${{ env.IMAGE_PATH }}:latest
 
       - name: 4) Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
