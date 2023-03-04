@@ -9,17 +9,21 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+from core.utils.secret_manager import load_secrets_manager_env
 from pathlib import Path
 import environ
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# AWS Secrets Manager 환경변수 세팅
+load_secrets_manager_env()
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 APPS_DIR = BASE_DIR / 'app'
 
 # 환경변수 설정
-env = environ.Env(DEBUG=(bool, True))
+env = environ.Env(DEBUG=(bool, True), )
+# Local 개발환경용
 environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
 )

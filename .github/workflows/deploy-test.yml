@@ -49,7 +49,8 @@ jobs:
         id: build-image
         uses: docker/build-push-action@v4
         with:
-          context: ./deploy
+          context: .
+          file: ./deploy
           push: true
           tags: ${{ env.ECR_NAME  }}:latest
           cache-from: type=gha
