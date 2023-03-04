@@ -45,20 +45,16 @@ jobs:
       - name: 5) Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: 6) TEST
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          echo $ECR_REGISTRY
-
-      - name: 7) Build, tag, and push the image to Amazon ECR
+      - name: 6) Build, tag, and push the image to Amazon ECR
         id: build-image
         uses: docker/build-push-action@v4
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         with:
           context: .
           file: ./deploy/Dockerfile
           push: true
           build-args: APP_NAME=local
-          tags: ${{ env.ECR_NAME  }}:latest
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_NAME  }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
