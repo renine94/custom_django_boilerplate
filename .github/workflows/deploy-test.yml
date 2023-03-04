@@ -12,6 +12,7 @@ env:
   APP_ENV: test
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: my-backend-test
+  CONTAINER_NAME: my_container_name
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
   ECS_TASK_DEFINITION: my_ecs_task_definition
