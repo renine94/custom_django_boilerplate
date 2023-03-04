@@ -18,8 +18,15 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
 
+
+def test():
+    from rest_framework.response import Response
+    return Response('hello world test!')
+
+
 urlpatterns = [
     path('admin', admin.site.urls),
+    path('test', test),
     # accounts
     path('v1/accounts', include('app.accounts.urls.v1')),
     path('v2/accounts', include('app.accounts.urls.v2')),
