@@ -11,7 +11,6 @@ concurrency:
 env:
   APP_ENV: test
   ECR_NAME: my-backend-test
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 
 jobs:
   build:
@@ -29,7 +28,6 @@ jobs:
           echo GITHUB_ACTION = $GITHUB_ACTION
           echo ECR_NAME = $ECR_NAME
           echo GITHUB_EVENT_NAME = $GITHUB_EVENT_NAME
-          echo AWS_ACCESS_KEY_ID = $AWS_ACCESS_KEY_ID
 
       - name: 3) AWS 자격인증
         uses: aws-actions/configure-aws-credentials@v1-node16
