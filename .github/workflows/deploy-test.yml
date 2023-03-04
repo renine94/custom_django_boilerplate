@@ -62,7 +62,6 @@ jobs:
             APP_ENV=${{ env.APP_ENV }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:latest
           tags: ${{ env.IMAGE_PATH }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
