@@ -81,10 +81,8 @@ jobs:
 
       - name: 1-1) TEST
         run: |
-          echo IMAGE_TAG1 = ${{ needs.build.outputs.build-image.outputs }}
-          echo IMAGE_TAG2 = ${{ needs.build.outputs.build-image }}
-          echo IMAGE_TAG3 = ${{ needs.build.outputs }}
-          echo IMAGE_TAG4 = ${{ needs.build }}
+          echo IMAGE_TAG3 = ${{ toJson(needs.build.outputs) }}
+          echo IMAGE_TAG4 = ${{ toJson(needs.build) }}
 
       - name: 2) AWS 자격인증
         uses: aws-actions/configure-aws-credentials@v1
