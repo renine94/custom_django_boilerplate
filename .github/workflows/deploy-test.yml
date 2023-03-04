@@ -81,7 +81,7 @@ jobs:
 
       - name: 1-1) TEST
         run: |
-          echo IMAGE_TAG = ${{ needs.build.steps.build-image.env.IMAGE_TAG }}
+          echo IMAGE_TAG = ${{ needs.build.outputs.build-image.outputs }}
           pwd
           echo $(pwd)
 
