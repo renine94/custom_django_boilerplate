@@ -12,7 +12,7 @@ env:
   APP_ENV: local
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: my-backend-test
-  CONTAINER_NAME: my_container_name
+  CONTAINER_NAME: my-container-for-ecs
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
   ECS_TASK_DEFINITION: ./deploy/task-definition.json
@@ -67,7 +67,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
     outputs:
-      IMAGE_TAGS: ${{ steps.build-image.outputs.IMAGE_TAG }}
+      IMAGE_TAGS: ${{ steps.build-image.env.IMAGE_TAG }}
 
   deploy:
     name: deploy
