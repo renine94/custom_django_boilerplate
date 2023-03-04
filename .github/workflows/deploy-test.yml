@@ -68,12 +68,11 @@ jobs:
 
       - name: Set color
         id: random-color-generator
-        run: echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+        run: |
+          echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+          echo "${{ steps.build-image.outputs }}"
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
-
-    outputs:
-      TEST_KYLE: test-kyle
 
   deploy:
     name: deploy
