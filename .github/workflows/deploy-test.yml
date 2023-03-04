@@ -21,6 +21,8 @@ jobs:
   build:
     name: build
     environment: dev
+    env:
+      TEST: kyletest
     runs-on: ubuntu-latest
     steps:
       - name: 1) 코드 가져오기
@@ -71,8 +73,8 @@ jobs:
         run: |
           echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
           echo "${{ steps.build-image.outputs.metadata }}"
-          echo "${{ steps.build-image.outputs.metadata.image }}"
-          echo "${{ steps.build-image.outputs.metadata.image.name }}"
+          echo "${{ steps.build-image.outputs.metadata['image'] }}"
+          echo "${{ steps.build-image.outputs.metadata }}"
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
 
@@ -96,10 +98,9 @@ jobs:
 
       - name: build job에 변수 가져오기 테스트
         run: |
-          echo SELECTED_COLOR1 = ${{ needs.steps.random-color-generator.outputs.SELECTED_COLOR }}
-          echo SELECTED_COLOR2 = ${{ needs.build.env }}
+          echo SELECTED_COLOR1 = ${{ needs.build.steps.random-color-generator.outputs.SELECTED_COLOR }}
+          echo SELECTED_COLOR2 = ${{ needs.build.env.TEST }}
           echo SELECTED_COLOR3 = $GITHUB_OUTPUT
-          echo SELECTED_COLOR4 = $GITHUB_CONTEXT
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
