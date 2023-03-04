@@ -75,8 +75,9 @@ jobs:
           echo "======================================1"
           echo "${{ steps.build-image.outputs.metadata }}"
           echo "======================================2"
-          echo "${{ fromJson(steps.build-image.outputs.metadata) }}"
+          echo "${{ toJson(fromJson(steps.build-image.outputs.metadata)) }}"
           echo "======================================3"
+          echo "${{ toJson(fromJson(steps.build-image.outputs.metadata)).image.name }}"
 
       - name: Get color
         run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
@@ -102,7 +103,7 @@ jobs:
       - name: build job에 변수 가져오기 테스트
         run: |
           echo SELECTED_COLOR1 = ${{ needs.build }}
-          echo SELECTED_COLOR1 = ${{ fromJson(needs.build) }}
+          echo SELECTED_COLOR2 = ${{ toJson(needs.build) }}
 
       - name: 3) Fill in the new image ID in the Amazon ECS task definition
         id: task-def
