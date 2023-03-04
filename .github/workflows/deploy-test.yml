@@ -54,7 +54,7 @@ jobs:
           context: .
           file: ./deploy/Dockerfile
           push: true
-          build-args: APP_NAME=local
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_NAME  }}:latest
+          build-args: APP_NAME=local,AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }},AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          tags: ${{ env.ECR_NAME  }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
