@@ -51,7 +51,6 @@ jobs:
         with:
           context: .
           file: ./deploy/Dockerfile
-          platforms: linux/amd64
           push: true
           build-args: APP_NAME=local,AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }},AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_NAME  }}:${{ github.sha }}
