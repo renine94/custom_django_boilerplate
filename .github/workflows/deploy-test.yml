@@ -61,8 +61,32 @@ jobs:
     name: deploy
     environment: dev
     runs-on: ubuntu-latest
-    needs: build
+    needs:
+      - build
+    env:
+      FITPET_ENV: prod
+      CLUSTER: myapp-cluster-prod
+      PROJECT_NAME: myapp-backend-prod
+
     steps:
-      - name: 1) Deploy Test
+      - name: 0) Test
         run: |
           echo 'ECS 로 꼭 배포성공 테스트 할테야!!'
+
+      - name: 1) 코드 이동
+        uses: actions/checkout@v2
+
+      - name: 2) AWS 자격인증
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: 3) Install ecs cli
+        uses: marocchino/setup-ecs-cli@v1
+        with:
+          version: 'latest'
+
+      - name: 4) 배포단계 Deploy
+        run: aws ecs update-service --cluster "${CLUSTER}" --service "${PROJECT_NAME}" --force-new-deployment
