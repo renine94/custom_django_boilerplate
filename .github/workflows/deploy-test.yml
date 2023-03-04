@@ -83,7 +83,7 @@ jobs:
         run: |
           echo IMAGE_TAG = ${{ needs.build.outputs.build-image.outputs }}
           pwd
-          echo $(pwd)
+          ls -al
 
       - name: 2) AWS 자격인증
         uses: aws-actions/configure-aws-credentials@v1
