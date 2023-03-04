@@ -19,7 +19,7 @@ from django.conf import settings
 from django.urls import path, include
 
 
-def test():
+def test(request):
     from rest_framework.response import Response
     return Response('hello world test!')
 

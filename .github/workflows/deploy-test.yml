@@ -16,7 +16,7 @@ env:
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
   ECS_TASK_DEFINITION: ./deploy/task-definition.json
-  IMAGE_PATH: 866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test
+  IMAGE_PATH: 866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test:${{ github.sha }}
 
 jobs:
   build:
@@ -54,7 +54,6 @@ jobs:
         uses: docker/build-push-action@v4
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         with:
           context: .
           file: ./deploy/Dockerfile
@@ -92,7 +91,7 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ env.IMAGE_PATH }}:latest
+          image: ${{ env.IMAGE_PATH }}
 
       - name: 4) Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
