@@ -13,6 +13,7 @@ def load_secrets_manager_env():
     region_name = "ap-northeast-2"
 
     session = boto3.session.Session(
+        # TODO 추후 변경 필요.
         # aws_access_key_id='',
         # aws_secret_access_key='',
         profile_name='Fitpet-dev',
