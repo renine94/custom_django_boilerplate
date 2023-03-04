@@ -28,6 +28,7 @@ def load_secrets_manager_env():
     except ClientError as e:
         # For a list of exceptions thrown, see
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        print('Secret Manager 에서 환경변수 값들을 가져오지 못하였습니다.')
         raise e
 
     envs = json.loads(get_secret_value_response['SecretString'])

@@ -65,8 +65,8 @@ jobs:
       - name: 7) set image variable
         id: set-image-path
         run: |
-          echo "IMAGE_PATH=${{  steps.build-image.outputs.image }}" >> $GITHUB_OUTPUT
-          echo ${{  steps.build-image.outputs.image }}
+          echo "IMAGE_PATH=${{  steps.build-image.outputs.Metadata.image.name }}" >> $GITHUB_OUTPUT
+          echo ${{  steps.build-image.outputs.Metadata.image.name }}
 
       - name: 8) Get Image Path
         run: echo "IMAGE_PATH = ${{ steps.set-image-path.outputs.IMAGE_PATH }}"
