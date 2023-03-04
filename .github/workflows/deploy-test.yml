@@ -16,7 +16,6 @@ env:
   ECS_CLUSTER: my_ecs_cluster
   ECS_SERVICE: my_ecs_service
   ECS_TASK_DEFINITION: ./deploy/task-definition.json
-  IMAGE_PATH: 866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-test:latest
 
 jobs:
   build:
@@ -54,20 +53,21 @@ jobs:
         uses: docker/build-push-action@v4
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_PATH: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}
         with:
           context: .
           file: ./deploy/Dockerfile
           push: true
           build-args: APP_NAME=local,AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }},AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:latest
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY  }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: 7) set image variable
         id: set-image-path
         run: |
-          echo "IMAGE_PATH=${{  steps.build-image.outputs.Metadata.image.name }}" >> $GITHUB_OUTPUT
-          echo ${{  steps.build-image.outputs.Metadata.image.name }}
+          echo "IMAGE_PATH=test-image-path" >> $GITHUB_OUTPUT
 
       - name: 8) Get Image Path
         run: echo "IMAGE_PATH = ${{ steps.set-image-path.outputs.IMAGE_PATH }}"
@@ -100,8 +100,7 @@ jobs:
         with:
           task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ env.IMAGE_PATH }}
-#          image: ${{ steps.build-image.outputs.image.name }}
+          image: ${{ jobs.build-image.outputs.IMAGE_PATH }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
