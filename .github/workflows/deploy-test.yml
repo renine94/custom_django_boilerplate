@@ -66,10 +66,10 @@ jobs:
       - name: 7) set image variable
         id: set-image-path
         run: |
-          echo "IMAGE_PATH=${{  steps.build-image.outputs }}" >> $GITHUB_OUTPUT
-          echo ${{  steps.build-image.outputs }}
+          echo "IMAGE_PATH=${{  steps.build-image.outputs.registry }}" >> $GITHUB_OUTPUT
+          echo ${{  steps.build-image.outputs.registry }}
 
-      - name: 8) Get color
+      - name: 8) Get Image Path
         run: echo "IMAGE_PATH = ${{ steps.set-image-path.outputs.IMAGE_PATH }}"
 
   deploy:
