@@ -1,0 +1,347 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:866611624080:task-definition/fm-backend-alpha:50",
+  "containerDefinitions": [
+    {
+      "name": "datadog-agent",
+      "image": "public.ecr.aws/datadog/agent:7.34.0",
+      "cpu": 0,
+      "links": [],
+      "portMappings": [
+        {
+          "containerPort": 8126,
+          "hostPort": 8126,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "command": [],
+      "environment": [
+        {
+          "name": "DD_API_KEY",
+          "value": "d0a86edc2803c6f7356f00dd90ab9f0a"
+        },
+        {
+          "name": "DD_SITE",
+          "value": "datadoghq.com"
+        },
+        {
+          "name": "DD_DOGSTATSD_PORT",
+          "value": "8125"
+        },
+        {
+          "name": "DD_SERVICE",
+          "value": "mall-backend"
+        },
+        {
+          "name": "ECS_FARGATE",
+          "value": "true"
+        },
+        {
+          "name": "DD_APM_ENABLED",
+          "value": "true"
+        },
+        {
+          "name": "DD_APM_FILTER_TAGS_REJECT",
+          "value": "[\"django.db.alias:read_only\",\"django.db.vendor:mysql\"]"
+        },
+        {
+          "name": "DD_ENV",
+          "value": "dev"
+        },
+        {
+          "name": "DD_TRACE_SAMPLING_RULES",
+          "value": "[{'service': 'read_onlydb', 'name': 'mysql.query', 'sample_rate':0.0, 'max_per_second': 50}]"
+        }
+      ],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "dnsServers": [],
+      "dnsSearchDomains": [],
+      "dockerSecurityOptions": [],
+      "dockerLabels": {
+        "Com.datadoghq.tags.env": "dev",
+        "Com.datadoghq.tags.service": "mall-backend"
+      },
+      "logConfiguration": {
+        "logDriver": "awsfirelens",
+        "options": {
+          "Host": "http-intake.logs.datadoghq.com",
+          "Name": "datadog",
+          "TLS": "on",
+          "apikey": "d0a86edc2803c6f7356f00dd90ab9f0a",
+          "dd_message_key": "log",
+          "dd_service": "mall-backend",
+          "dd_source": "django",
+          "dd_tags": "project:mall,env:dev",
+          "provider": "ecs"
+        }
+      },
+      "systemControls": []
+    },
+    {
+      "name": "app",
+      "image": "866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/fm-backend-ecs/app/alpha:latest",
+      "cpu": 0,
+      "links": [],
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "command": [
+        "/bin/bash",
+        "-c",
+        "python manage.py create_server_config && GUNICORN_WORKERS=$((`nproc` * 2 + 1)) && gunicorn fitpet.wsgi:application --bind 0.0.0.0:8000 --max-requests 1000 --max-requests-jitter 50 --worker-connections=1000 --worker-class=gevent --workers=$GUNICORN_WORKERS --timeout 120 --access-logfile - --error-logfile -"
+      ],
+      "environment": [
+        {
+          "name": "DJANGO_SETTINGS_MODULE",
+          "value": "fitpet.settings.alpha"
+        },
+        {
+          "name": "FITPET_ENV",
+          "value": "alpha"
+        },
+        {
+          "name": "CELERY_BROKER_URL",
+          "value": "redis://fitpetmal-alpha-redis.dqmcxu.ng.0001.apn2.cache.amazonaws.com:6379/1"
+        },
+        {
+          "name": "REDIS_CACHE_URL",
+          "value": "redis://fitpetmal-alpha-cache-redis.dqmcxu.ng.0001.apn2.cache.amazonaws.com:6379/0"
+        },
+        {
+          "name": "AWS_DEFAULT_REGION",
+          "value": "ap-northeast-2"
+        },
+        {
+          "name": "DD_APM_FILTER_TAGS_REJECT",
+          "value": "mysql.query:read_onlydb"
+        },
+        {
+          "name": "DD_DJANGO_INSTRUMENT_DATABASES",
+          "value": "false"
+        },
+        {
+          "name": "DD_SPAN_SAMPLING_RULES",
+          "value": "[{\"service\": \"read_onlydb\", \"name\":\"mysql.query\", \"sample_rate\":0.0}]"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "static-storage",
+          "containerPath": "/fitpet-backend/fitpet/static",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "media-storage",
+          "containerPath": "/fitpet-backend/fitpet/media",
+          "readOnly": false
+        }
+      ],
+      "volumesFrom": [],
+      "linuxParameters": {
+        "initProcessEnabled": true,
+        "tmpfs": []
+      },
+      "dnsServers": [],
+      "dnsSearchDomains": [],
+      "dockerSecurityOptions": [],
+      "dockerLabels": {
+        "Com.datadoghq.tags.env": "dev",
+        "Com.datadoghq.tags.project": "mall"
+      },
+      "logConfiguration": {
+        "logDriver": "awsfirelens",
+        "options": {
+          "Host": "http-intake.logs.datadoghq.com",
+          "Name": "datadog",
+          "TLS": "on",
+          "apikey": "d0a86edc2803c6f7356f00dd90ab9f0a",
+          "dd_message_key": "log",
+          "dd_service": "mall-backend",
+          "dd_source": "django",
+          "dd_tags": "project:mall,env:dev",
+          "provider": "ecs"
+        }
+      },
+      "systemControls": []
+    },
+    {
+      "name": "nginx",
+      "image": "866611624080.dkr.ecr.ap-northeast-2.amazonaws.com/fm-backend-ecs/nginx:latest",
+      "cpu": 0,
+      "links": [],
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "command": [
+        "nginx",
+        "-g",
+        "daemon off;"
+      ],
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "linuxParameters": {
+        "initProcessEnabled": true,
+        "tmpfs": []
+      },
+      "dnsServers": [],
+      "dnsSearchDomains": [],
+      "dockerSecurityOptions": [],
+      "dockerLabels": {},
+      "logConfiguration": {
+        "logDriver": "awsfirelens",
+        "options": {
+          "Host": "http-intake.logs.datadoghq.com",
+          "Name": "datadog",
+          "TLS": "on",
+          "apikey": "d0a86edc2803c6f7356f00dd90ab9f0a",
+          "dd_message_key": "log",
+          "dd_service": "mall-backend",
+          "dd_source": "nginx",
+          "dd_tags": "project:mall,env:dev",
+          "provider": "ecs"
+        }
+      },
+      "systemControls": []
+    },
+    {
+      "name": "log_router",
+      "image": "public.ecr.aws/aws-observability/aws-for-fluent-bit:2.23.1",
+      "cpu": 0,
+      "links": [],
+      "portMappings": [],
+      "essential": true,
+      "entryPoint": [],
+      "command": [],
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "user": "0",
+      "dnsServers": [],
+      "dnsSearchDomains": [],
+      "dockerSecurityOptions": [],
+      "dockerLabels": {
+        "Com.datadoghq.tags.env": "dev",
+        "Com.datadoghq.tags.service": "mall-backend"
+      },
+      "systemControls": [],
+      "firelensConfiguration": {
+        "type": "fluentbit",
+        "options": {
+          "config-file-type": "file",
+          "config-file-value": "/fluent-bit/configs/parse-json.conf",
+          "enable-ecs-log-metadata": "true"
+        }
+      }
+    }
+  ],
+  "family": "fm-backend-alpha",
+  "taskRoleArn": "arn:aws:iam::866611624080:role/fitpetBackendEcsTaskRole",
+  "executionRoleArn": "arn:aws:iam::866611624080:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "revision": 50,
+  "volumes": [
+    {
+      "name": "static-storage",
+      "host": {}
+    },
+    {
+      "name": "media-storage",
+      "host": {}
+    }
+  ],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "ecs.capability.firelens.options.config.file"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+    },
+    {
+      "name": "ecs.capability.increased-task-cpu-limit"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awsfirelens"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.22"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "ecs.capability.firelens.fluentbit"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.25"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "8192",
+  "memory": "16384",
+  "registeredAt": "2022-12-21T02:33:10.454Z",
+  "registeredBy": "arn:aws:iam::866611624080:user/jaeho.lee@fitpet.co.kr",
+  "tags": [
+    {
+      "key": "Project",
+      "value": "mall"
+    },
+    {
+      "key": "Environment",
+      "value": "dev"
+    },
+    {
+      "key": "Terraform",
+      "value": "true"
+    },
+    {
+      "key": "Component",
+      "value": "mall-backend"
+    },
+    {
+      "key": "ecs:taskDefinition:createdFrom",
+      "value": "ecs-console-v2"
+    },
+    {
+      "key": "ecs:taskDefinition:stackId",
+      "value": "arn:aws:cloudformation:ap-northeast-2:866611624080:stack/ECS-Console-V2-TaskDefinition-0ac9e0df-44b3-4534-b69c-97f6e2cd408e/3d11a9d0-cf6f-11ec-9520-021ca39d8b18"
+    }
+  ]
+}
